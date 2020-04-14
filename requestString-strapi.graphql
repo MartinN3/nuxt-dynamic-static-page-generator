@@ -1,0 +1,112 @@
+# Page query
+query find_pages(
+  $find_pages_limit: Int = 10000
+  $find_pages_where: JSON = {}
+  $find_pages_sort: String = "id:asc"
+) {
+  pages(limit: $find_pages_limit, where: $find_pages_where, sort: $find_pages_sort) {
+    id
+    title
+    parent_id
+    ...Seo
+    ...EntityStatus
+    ...Helpers
+    Components {
+      ...PageComponents
+    }
+  }
+}
+
+# Page fragments
+fragment Seo on Page {
+  seo {
+    ...SeoFields
+  }
+}
+
+fragment EntityStatus on Page {
+  entityStatus {
+    ...EntityStatusFields
+  }
+}
+
+fragment Helpers on Page {
+  helpers {
+    ...HelpersFields
+  }
+}
+
+# Page Components fragments
+fragment PageComponents on PageComponentsDynamicZone {
+  __typename
+  ... on ComponentPageComponentsHero {
+    slides: Hero {
+      id
+      title
+      content
+    }
+  }
+
+  ... on ComponentPageComponentsCollapseFaq {
+    id
+    title
+    faqs {
+      id
+    }
+  }
+}
+
+# SpecialOffers query
+
+query find_specialOffers(
+  $find_specialOffers_where: JSON
+) {
+  specialOffers(sort: "validFrom:DESC", where: $find_specialOffers_where) {
+      id
+      title
+      description
+      content
+      validFrom
+      validTo
+      cloudinaryImage
+      button {
+        title
+        linkUrl
+      }
+      seo {
+        ...SeoFields
+      }
+      entityStatus {
+        ...EntityStatusFields
+      }
+      helpers {
+        ...HelpersFields
+      }
+  }
+}
+
+# Global fragments
+
+fragment SeoFields on ComponentHelpersSeo {
+  urlSlug
+  canonicalUrl
+  title
+  description
+  keywords
+  robots
+  includeToSitemap
+  codeGA
+  codeGTM
+}
+
+fragment EntityStatusFields on ComponentHelpersEntityStatus {
+  workflowStep
+  publishDate
+  dueDate
+}
+
+fragment HelpersFields on ComponentHelpersHelpers {
+  systemEntity
+  systemEntityUid
+  dataStore
+}
