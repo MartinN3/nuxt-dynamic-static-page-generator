@@ -9,7 +9,7 @@ import axios from 'axios';
 export default {
   name: 'dog',
   asyncData(context) {
-    return { test: context.params.category }
+    return { test: JSON.stringify(context.params) }
     //return axios.get(`https://api.thedogapi.com/v1/images/${context.params.slug}`)
     //  // eslint-disable-next-line arrow-body-style
     //  .then(({ data }) => {
